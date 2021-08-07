@@ -6,7 +6,7 @@ import bmp from 'fast-bmp';
 //   0xff, 0xff, 0xff, 0x00,
 // ]);
 
-const BITMAP_WIDTH = 384;
+const BITMAP_WIDTH = 500;
 
 const setBit = (
   buffer: Uint8Array,

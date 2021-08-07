@@ -84,7 +84,7 @@ export default class Bridge implements BridgeInterface {
   };
 
   handle = async (command: Command): Promise<CommandResponse> => {
-    switch (command.type) {
+     switch (command.type) {
       case CommandType.BridgeCommand:
         return this.handleBridgeCommand(command as BridgeCommand);
       case CommandType.DeviceCommand:
@@ -126,7 +126,6 @@ export default class Bridge implements BridgeInterface {
     assert(this.device.address === command.device_address);
 
     const payload = await decoder(command.binary_payload);
-
     return await this.device.handlePayload(payload);
   };
 }

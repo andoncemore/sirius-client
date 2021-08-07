@@ -1,5 +1,5 @@
 import { PrinterDriverInterface, PrintingResult } from '.';
-
+import bitmapify from '../decoder/parser/bitmapify';
 import escpos from 'escpos';
 import getPixels from 'get-pixels';
 import gm from 'gm';
@@ -8,21 +8,35 @@ type Pixels = {};
 
 const im = gm.subClass({ imageMagick: true });
 
-const device = new escpos.USB();
+escpos.USB = require('escpos-usb');
+const device = new escpos.USB(0x04b8,0x0202);
 const printer = new escpos.Printer(device);
 
+const tester = async (buf: Buffer): Promise<String> => {
+  return new Promise((resolve,reject) => {
+    im(buf).size(function(err,value) {
+      console.log(value);
+      if(err){
+        return reject(err);
+      }
+      return resolve("Success");
+    });
+  });	
+};
+
+
 const pnger = async (buf: Buffer): Promise<Buffer> => {
+  console.log("pnger",buf);
   return new Promise((resolve, reject) => {
-    im(buf)
+    im(buf,"example.jpeg")
       .colors(2)
       .define('png:bit-depth=1')
-      .toBuffer('PNG', (err, out) => {
+      .toBuffer('png', (err, out) => {
         if (err) {
-          return reject(err);
+           return reject(err);
         }
-
         return resolve(out);
-      });
+     });
   });
 };
 
@@ -58,9 +72,7 @@ const printr = async (pixels: Pixels): Promise<void> => {
       // printer.buffer.writeUInt8(127); // heatingInterval, default 2
 
       printer
-        .newLine()
         .raster(image)
-        .cut()
         .close();
 
       resolve();
@@ -70,13 +82,20 @@ const printr = async (pixels: Pixels): Promise<void> => {
 
 const thermalise = async (buf: Buffer): Promise<void> => {
   // convert to PNG, because `get-pixels` doesn't support 1bit BMPs
-  const png = await pnger(buf);
-
-  // create pixels from png
-  const pixels = await pixeler(png);
-
-  // print 'em
-  await printr(pixels);
+  try{
+    const bitmap = bitmapify(buf);
+    console.log(bitmap);
+    // await tester(buf);
+    const png = await pnger(bitmap);
+    console.log("png variable", png);
+    // create pixels from png
+    const pixels = await pixeler(png);
+    console.log("pixels variable", pixels);
+    // print 'em
+    await printr(pixels);
+  } catch(e){
+    console.log("Error", e);
+  }
 };
 
 export default class EscposPrinter implements PrinterDriverInterface {

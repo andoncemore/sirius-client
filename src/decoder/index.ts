@@ -4,6 +4,7 @@ import parsePayload from './parser/payload';
 import { BinaryPayload } from './types';
 
 export default async (base64: string): Promise<BinaryPayload> => {
+  debugger;
   const buf = Buffer.from(base64, 'base64');
 
   const header = parseHeader(buf);

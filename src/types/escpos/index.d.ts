@@ -12,7 +12,9 @@ declare module 'escpos' {
     write(data: Buffer, callback: (err: Error) => void): void;
   }
 
-  export class USB extends Device {}
+  export class USB extends Device {
+     constructor(vid: number, pid: number);
+  }
 
   export class Printer {
     constructor(device: Device);

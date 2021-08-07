@@ -31,6 +31,7 @@
     "@rushstack/ts-command-line": "^4.3.11",
     "binary-parser": "^1.4.0",
     "escpos": "^3.0.0-alpha.3",
+    "escpos-usb": "^3.0.0-alpha.4",
     "fast-bmp": "^1.0.0",
     "get-pixels": "^3.3.2",
     "gm": "^1.23.1",

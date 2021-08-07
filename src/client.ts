@@ -5,7 +5,7 @@ import Bridge from './bridge';
 import Printer from './device/printer';
 import ConsolePrinterDriver from './printer-driver/console';
 import FilesystemPrinterDriver from './printer-driver/filesystem-printer';
-// import EscposPrinter from './printer-driver/escpos';
+import EscposPrinter from './printer-driver/escpos';
 // import StarPrinterDriver from './printer-driver/star';
 
 const readFile = promisify(fs.readFile);
@@ -98,9 +98,9 @@ export default async (
     case 'filesystem':
       printerDriver = new FilesystemPrinterDriver();
       break;
-    // case 'escpos':
-    //   printerDriver = new EscposPrinter();
-    //   break;
+    case 'escpos':
+      printerDriver = new EscposPrinter();
+      break;
     // case 'star':
     //   printerDriver = new StarPrinterDriver();
     //   break;
